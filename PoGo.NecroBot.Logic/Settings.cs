@@ -1002,7 +1002,28 @@ namespace PoGo.NecroBot.Logic
 
             Console.WriteLine("");
             Logger.Write(translator.GetTranslation(TranslationString.FirstStartSetupPasswordPrompt), LogLevel.None);
-            strInput = Console.ReadLine();
+            strInput = "";
+            ConsoleKeyInfo info = Console.ReadKey(true);
+            while (info.Key != ConsoleKey.Enter)
+            {
+                if (info.Key != ConsoleKey.Backspace)
+                {
+                    Console.Write("*");
+                    strInput += info.KeyChar;
+                }
+                else if (info.Key == ConsoleKey.Backspace)
+                {
+                    if (!string.IsNullOrEmpty(strInput))
+                    {
+                        strInput = strInput.Substring(0, strInput.Length - 1);
+                        int pos = Console.CursorLeft;
+                        Console.SetCursorPosition(pos - 1, Console.CursorTop);
+                        Console.Write(" ");
+                        Console.SetCursorPosition(pos - 1, Console.CursorTop);
+                    }
+                }
+                info = Console.ReadKey(true);
+            }
 
             if (settings.Auth.AuthType == AuthType.Google)
                 settings.Auth.GooglePassword = strInput;
